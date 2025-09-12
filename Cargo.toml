@@ -1,0 +1,11 @@
+[package]
+name = "limni"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+thimni = "0.3.1"
+mlua = { version = "0.11", features = ["luajit", "module"] }
