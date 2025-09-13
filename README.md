@@ -11,7 +11,7 @@ when the bindings are more stable and mature.
 
 Limni will work with any table containing the following two functions:
 1. `dist`:
-  - inputs: `self` and A point
+  - inputs: `self` and a point
   - outputs: the signed distance between that point and the surface of the
   shape.
 2. `get_aabb`:
