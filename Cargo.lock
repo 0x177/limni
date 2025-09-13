@@ -309,9 +309,9 @@ dependencies = [
 
 [[package]]
 name = "thimni"
-version = "0.3.1"
+version = "0.3.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "10927cf009f9b38dc7bb658caa6f1c4f64e95770a82201ddd451435aebfd21d9"
+checksum = "7ad807d628ab3be238c1c427964a67f9898c472fb4826969feb94dbaa31bda02"
 dependencies = [
  "glam",
  "quad-rand",

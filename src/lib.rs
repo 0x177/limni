@@ -47,12 +47,6 @@ impl LuaTableWrapper for LuaTable {
         if let Some(a) = self.get::<f32>("minimum_radius").ok() {
             params.minimum_radius = a;
         }
-        if let Some(a) = self.get::<usize>("monte_carlo_samples").ok() {
-            params.monte_carlo_samples = a;
-        }
-        if let Some(a) = self.get::<f32>("monte_carlo_bias_factor").ok() {
-            params.monte_carlo_bias_factor = a;
-        }
 
         params
     }
@@ -175,7 +169,7 @@ fn get_collision_3d(
     Ok(rt)
 }
 
-fn monte_carlo_depth_3d(
+fn approximate_depth_3d(
     lua: &Lua,
     (params, a, b, result): (LuaTable, LuaTable, LuaTable, LuaTable),
 ) -> LuaResult<f32> {
@@ -191,7 +185,7 @@ fn monte_carlo_depth_3d(
 
     let params = params.to_params();
 
-    let depth = asdf.monte_carlo_depth(
+    let depth = asdf.sum_gradient_depth(
         &bsdf,
         &params,
         &CollisionResult {
@@ -239,7 +233,7 @@ fn get_collision_2d(
     Ok(rt)
 }
 
-fn monte_carlo_depth_2d(
+fn approximate_depth_2d(
     lua: &Lua,
     (params, a, b, result): (LuaTable, LuaTable, LuaTable, LuaTable),
 ) -> LuaResult<f32> {
@@ -255,7 +249,7 @@ fn monte_carlo_depth_2d(
 
     let params = params.to_params();
 
-    let depth = asdf.monte_carlo_depth(
+    let depth = asdf.sum_gradient_depth(
         &bsdf,
         &params,
         &CollisionResult {
@@ -266,6 +260,7 @@ fn monte_carlo_depth_2d(
 
     Ok(depth)
 }
+
 #[mlua::lua_module]
 fn limni(lua: &Lua) -> LuaResult<LuaTable> {
     let exports = lua.create_table()?;
@@ -274,13 +269,13 @@ fn limni(lua: &Lua) -> LuaResult<LuaTable> {
     exports.set("get_collision_2d", lua.create_function(get_collision_2d)?)?;
 
     exports.set(
-        "monte_carlo_depth_3d",
-        lua.create_function(monte_carlo_depth_3d)?,
+        "approximate_depth_3d",
+        lua.create_function(approximate_depth_3d)?,
     )?;
 
     exports.set(
-        "monte_carlo_depth_2d",
-        lua.create_function(monte_carlo_depth_2d)?,
+        "approximate_depth_2d",
+        lua.create_function(approximate_depth_2d)?,
     )?;
 
     Ok(exports)
