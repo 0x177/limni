@@ -29,7 +29,7 @@ The collision functions are the following, with N replaced with 2 or 3:
 1. `get_collision_Nd`:
   - inputs: collision parameters, an SDF, an SDF
   - outputs: a collision result table containing a `point` and a `gradient`.
-2. `monte_carlo_depth_Nd`:
+2. `approximate_depth_Nd`:
   - inputs: collision parameters, and SDF, and SDF, and the result of the collision
   - outputs: approximated depth of the collision between the two SDFs
 
