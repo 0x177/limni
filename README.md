@@ -1,9 +1,6 @@
 # limni!
 Lua bindings for my library [thimni](https://codeberg.org/0x177/thimni).
 
-Thimni is a library utilizing a [novel algorithm](https://0x177.codeberg.page/sdf_collision.html)
-to detect collision between general SDFs in real time.
-
 ## usage
 While thimni is n-dimensional, the lua bindings are currently restricted to 2D
 and 3D. Support for n-dimensional SDFs in the lua bindings will be implemented
