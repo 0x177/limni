@@ -1,5 +1,6 @@
 use mlua::prelude::*;
 use thimni::{
+    raycast::RayCast,
     sdf::{CollisionResult, SDF},
     utils::{AABB, CollisionParameters},
 };
@@ -261,6 +262,64 @@ fn approximate_depth_2d(
     Ok(depth)
 }
 
+fn query_raycast_3d(
+    lua: &Lua,
+    (ray, params, sdf): (LuaTable, LuaTable, LuaTable),
+) -> LuaResult<LuaTable> {
+    let origin = ray.get::<LuaTable>("origin")?.to_vec3();
+    let direction = ray.get::<LuaTable>("direction")?.to_vec3();
+    let max_dist = ray.get::<LuaNumber>("max_dist")?;
+
+    let sdf = LuaSDF3D {
+        table: sdf,
+        lua: &lua,
+    };
+
+    let mut r = RayCast::new(origin, direction, max_dist as f32);
+
+    let params = params.to_params();
+
+    let result = r.query(&sdf, &params);
+
+    let k = lua.create_table()?;
+
+    if let Some(result) = result {
+        k.set("point", result.point)?;
+        k.set("gradient", result.gradient)?;
+    }
+
+    Ok(k)
+}
+
+fn query_raycast_2d(
+    lua: &Lua,
+    (ray, params, sdf): (LuaTable, LuaTable, LuaTable),
+) -> LuaResult<LuaTable> {
+    let origin = ray.get::<LuaTable>("origin")?.to_vec2();
+    let direction = ray.get::<LuaTable>("direction")?.to_vec2();
+    let max_dist = ray.get::<LuaNumber>("max_dist")?;
+
+    let sdf = LuaSDF2D {
+        table: sdf,
+        lua: &lua,
+    };
+
+    let mut r = RayCast::new(origin, direction, max_dist as f32);
+
+    let params = params.to_params();
+
+    let result = r.query(&sdf, &params);
+
+    let k = lua.create_table()?;
+
+    if let Some(result) = result {
+        k.set("point", result.point)?;
+        k.set("gradient", result.gradient)?;
+    }
+
+    Ok(k)
+}
+
 #[mlua::lua_module]
 fn limni(lua: &Lua) -> LuaResult<LuaTable> {
     let exports = lua.create_table()?;
@@ -277,6 +336,9 @@ fn limni(lua: &Lua) -> LuaResult<LuaTable> {
         "approximate_depth_2d",
         lua.create_function(approximate_depth_2d)?,
     )?;
+
+    exports.set("query_raycast_3d", lua.create_function(query_raycast_2d)?)?;
+    exports.set("query_raycast_2d", lua.create_function(query_raycast_3d)?)?;
 
     Ok(exports)
 }
