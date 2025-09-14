@@ -37,6 +37,5 @@ The collision functions are the following, with N replaced with 2 or 3:
 | Issue                                | urgency       |
 | :----------------------------------: | :-----------: |
 | add raycasting                       | high          |
-| add helper for combinations of SDFs  | high          |
 | add 3D examples                      | medium        |
 | add support for N-dimensional SDFs   | low           |
